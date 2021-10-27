@@ -54,30 +54,24 @@ router.post('/add', (req, res) => {
 })
 
 // GET /events/3/edit
-router.get('/:id/edit', (req, res) => {
-    const id = Number(req.params.id)
+router.get('/:id/edit', async(req, res) => {
+    try {
+        const id = Number(req.params.id)
 
-    db.getEventById(id)
-        .then((event) => {
-            db.getAllLocations()
-                .then((locations) => {
-                    // This is done for you
-                    const days = eventDays.map(eventDay => ({
-                        value: eventDay,
-                        name: capitalise(eventDay),
-                        selected: eventDay === event.day ? 'selected' : ''
-                    }))
+        const event = await db.getEventById(id)
+        const locations = await db.getAllLocations()
+        const days = eventDays.map(eventDay => ({
+            value: eventDay,
+            name: capitalise(eventDay),
+            selected: eventDay === event.day ? 'selected' : ''
+        }))
+        const viewData = { event, locations, days }
+        res.render('editEvent', viewData)
+    } catch (error) {
 
-                    const viewData = { event, locations, days }
-                    res.render('editEvent', viewData)
-                    return null
-                })
-                .catch(err => {
-                    res.render('error', { message: err.message })
-                    return null
-                })
-        })
-
+        res.render('error', { message: error.message })
+        return null
+    }
 })
 
 // POST /events/edit
