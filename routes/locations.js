@@ -20,11 +20,19 @@ router.get('/', (req, res) => {
 // POST /locations/edit
 router.post('/edit', (req, res) => {
     // ASSISTANCE: So you know what's being posted ;)
-    const { id, name, description } = req.body
+    // const { id, name, description } = req.body
+    const updatedLocation = { id: req.body.id, name: req.body.name, description: req.body.description }
 
     db.updateLocation(updatedLocation)
-
-    res.redirect('/locations')
+        .then((noOfAffectedRows) => {
+            console.log(noOfAffectedRows, ' records affected');
+            res.redirect('/locations')
+            return null
+        })
+        .catch(err => {
+            res.render('error', { message: err.message })
+            return null
+        })
 })
 
 // GET /locations/4/edit

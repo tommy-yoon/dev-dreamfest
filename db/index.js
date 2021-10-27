@@ -6,7 +6,9 @@ module.exports = {
     // close,
     getAllLocations,
     getEventsByDay,
-    getLocationById
+    getLocationById,
+    updateLocation,
+    addNewEvent
 }
 
 function getAllLocations(db = database) {
@@ -27,6 +29,19 @@ function getLocationById(id, db = database) {
         .select('id', 'name', 'description')
         .first()
 }
+
+function updateLocation(updatedLocation, db = database) {
+    return db('locations')
+        .where({ id: updatedLocation.id })
+        .update({ name: updatedLocation.name, description: updatedLocation.description })
+}
+
+function addNewEvent(newEvent, db = database) {
+    return db('events')
+        //const newEvent = { name: req.body.name, description: req.body.description, time: req.body.time, locationId: req.body.locationId, day: day }
+        .insert({ id: newEvent.id, location_id: newEvent.locationId, day: newEvent.day, time: newEvent.time, name: newEvent.name, description: newEvent.description })
+}
+
 
 // function close(db = database) {
 //     db.destroy()
