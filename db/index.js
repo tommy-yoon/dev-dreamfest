@@ -2,18 +2,25 @@ const knex = require('knex')
 const config = require('./knexfile').development
 const database = knex(config)
 
+// showing SQL
+database.on('query', console.log)
+
 module.exports = {
     // close,
     getAllLocations,
     getEventsByDay,
     getLocationById,
     updateLocation,
-    addNewEvent
+    addNewEvent,
+    deleteEvent,
+    getEventById,
+    updateEvent
 }
 
 function getAllLocations(db = database) {
-    return db('locations')
+    return db
         .select('id', 'name', 'description')
+        .from('locations')
 }
 
 function getEventsByDay(day, db = database) {
@@ -32,16 +39,29 @@ function getLocationById(id, db = database) {
 
 function updateLocation(updatedLocation, db = database) {
     return db('locations')
-        .where({ id: updatedLocation.id })
-        .update({ name: updatedLocation.name, description: updatedLocation.description })
+        .where({ "id": updatedLocation.id })
+        // .update({ "name": updatedLocation.name, "description": updatedLocation.description })
+        .update(updatedLocation)
 }
 
 function addNewEvent(newEvent, db = database) {
     return db('events')
-        //const newEvent = { name: req.body.name, description: req.body.description, time: req.body.time, locationId: req.body.locationId, day: day }
-        .insert({ id: newEvent.id, location_id: newEvent.locationId, day: newEvent.day, time: newEvent.time, name: newEvent.name, description: newEvent.description })
+        .insert(newEvent)
 }
 
+function deleteEvent(id, db = database) {
+    return db('events')
+        .where({ "id": id })
+        .del()
+}
+
+function getEventById(id, db = database) {
+    return db.where({ "id": id }).first().from('events')
+}
+
+function updateEvent(updatedEvent, db = database) {
+    return db('events').update(updatedEvent).where('id', updatedEvent.id)
+}
 
 // function close(db = database) {
 //     db.destroy()
