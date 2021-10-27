@@ -17,6 +17,10 @@ router.get('/', (req, res) => {
         })
 })
 
+router.get('/add', (req, res) => {
+    res.render('addLocation')
+})
+
 // POST /locations/edit
 router.post('/edit', (req, res) => {
     // ASSISTANCE: So you know what's being posted ;)
