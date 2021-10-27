@@ -77,7 +77,7 @@ router.get('/:id/edit', async(req, res) => {
 // POST /events/edit
 router.post('/edit', (req, res) => {
     // ASSISTANCE: So you know what's being posted ;)
-    const { name, description, time } = req.body
+    // const { name, description, time } = req.body
     const id = Number(req.body.id)
     const day = validateDay(req.body.day)
     const locationId = Number(req.body.locationId)

@@ -14,7 +14,9 @@ module.exports = {
     addNewEvent,
     deleteEvent,
     getEventById,
-    updateEvent
+    updateEvent,
+    addNewLocation,
+    deleteLocation
 }
 
 function getAllLocations(db = database) {
@@ -61,6 +63,17 @@ function getEventById(id, db = database) {
 
 function updateEvent(updatedEvent, db = database) {
     return db('events').update(updatedEvent).where('id', updatedEvent.id)
+}
+
+function addNewLocation(locationInfo, db = database) {
+    return db('locations')
+        .insert(locationInfo)
+}
+
+function deleteLocation(id, db = database) {
+    return db('locations')
+        .where({ "id": id })
+        .del()
 }
 
 // function close(db = database) {

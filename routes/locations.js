@@ -12,19 +12,43 @@ router.get('/', async(req, res) => {
     } catch (error) {
         res.render('error', { message: error.message })
     }
-
-    // .then((locations) => {
-    //     res.render('showLocations', { locations })
-    //     return null
-    // })
-    // .catch(err => {
-    //     res.render('error', { message: err.message })
-    //     return null
-    // })
 })
 
 router.get('/add', (req, res) => {
     res.render('addLocation')
+})
+
+router.post('/add', async(req, res) => {
+    try {
+        const locationInfo = {
+            "name": req.body.name,
+            "description": req.body.description
+        }
+
+        const noOfAffectedRows = await db.addNewLocation(locationInfo)
+        console.log(noOfAffectedRows, ' records affected');
+        res.redirect('/locations')
+
+    } catch (error) {
+        res.render('error', { message: error.message })
+    }
+})
+
+
+// GET /locations/4/edit
+router.get('/:id/edit', (req, res) => {
+    const id = Number(req.params.id)
+
+    db.getLocationById(id)
+        .then((location) => {
+            // res.render('showLocations', { locations })
+            res.render('editLocation', location)
+            return null
+        })
+        .catch(error => {
+            res.render('error', { message: error.message })
+            return null
+        })
 })
 
 // POST /locations/edit
@@ -41,32 +65,20 @@ router.post('/edit', async(req, res) => {
         res.redirect('/locations')
 
     } catch (error) {
-        res.render('error', { message: err.message })
+        res.render('error', { message: error.message })
     }
-
-    // .then((noOfAffectedRows) => {
-    //     console.log(noOfAffectedRows, ' records affected');
-    //     res.redirect('/locations')
-    //     return null
-    // })
-    // .catch(err => {
-    // res.render('error', { message: err.message })
-    //     return null
-    // })
 })
 
-// GET /locations/4/edit
-router.get('/:id/edit', (req, res) => {
-    const id = Number(req.params.id)
+// POST /locations/delete
+router.post('/delete', async(req, res) => {
+    try {
+        const id = Number(req.body.id)
 
-    db.getLocationById(id)
-        .then((location) => {
-            // res.render('showLocations', { locations })
-            res.render('editLocation', location)
-            return null
-        })
-        .catch(err => {
-            res.render('error', { message: err.message })
-            return null
-        })
+        const noOfAffectedRows = await db.deleteLocation(id)
+        console.log(noOfAffectedRows, ' records affected');
+        res.redirect('/locations')
+
+    } catch (error) {
+        res.render('error', { message: error.message })
+    }
 })
