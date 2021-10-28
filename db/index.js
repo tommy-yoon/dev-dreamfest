@@ -3,7 +3,10 @@ const config = require('./knexfile').development
 const database = knex(config)
 
 // showing SQL
-database.on('query', console.log)
+database.on('query', (data) => {
+    console.log('SQL', data.sql)
+    console.log('Bindings', data.bindings)
+})
 
 module.exports = {
     // close,
