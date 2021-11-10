@@ -68,9 +68,7 @@ router.get('/:id/edit', async(req, res) => {
         const viewData = { event, locations, days }
         res.render('editEvent', viewData)
     } catch (error) {
-
         res.render('error', { message: error.message })
-        return null
     }
 })
 
